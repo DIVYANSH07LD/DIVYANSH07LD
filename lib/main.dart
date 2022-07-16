@@ -11,51 +11,53 @@ void main() async{
   Future<void> backGroundHandler(RemoteMessage message)async{
     print(message.data.toString());
     print(message.notification);
-    AwesomeNotifications().createNotificationFromJsonData(message.data);
+    AwesomeNotifications().createNotificationFromJsonData(
+        message.data
+    );
   }
 
   FirebaseMessaging.onBackgroundMessage(backGroundHandler);
 
-  // AwesomeNotifications().initialize(
-  //    null,
-  //     [
-  //       NotificationChannel(
-  //           channelName: 'Basic Notification',
-  //           channelKey: 'test_channel',
-  //           channelGroupKey: 'basic_tests',
-  //           playSound: true,
-  //           channelDescription: 'Notification for Test',
-  //         channelShowBadge: true
-  //           ),
-  //       NotificationChannel(
-  //         channelGroupKey: 'schedule_tests',
-  //         channelKey: 'scheduled',
-  //         channelName: 'Scheduled notifications',
-  //         channelDescription: 'Notifications with schedule functionality',
-  //         defaultColor: Color(0xFF9D50DD),
-  //         ledColor: Color(0xFF9D50DD),
-  //         vibrationPattern: lowVibrationPattern,
-  //         importance: NotificationImportance.High,
-  //         defaultRingtoneType: DefaultRingtoneType.Alarm,
-  //         criticalAlerts: true,
-  //           channelShowBadge: true
-  //
-  //       ),
-  //     ],
-  //   channelGroups: [
-  //       NotificationChannelGroup(
-  //         channelGroupkey: "basic_tests",
-  //         channelGroupName:  "Basic tests",
-  //
-  //       ),
-  //       NotificationChannelGroup(
-  //         channelGroupkey: 'schedule_tests',
-  //         channelGroupName: 'Schedule tests'
-  //     ),
-  //
-  //   ],
-  //   debug: true,
-  // );
+  AwesomeNotifications().initialize(
+     null,
+      [
+        NotificationChannel(
+            channelName: 'Basic Notification',
+            channelKey: 'test_channel',
+            channelGroupKey: 'basic_tests',
+            playSound: true,
+            channelDescription: 'Notification for Test',
+          channelShowBadge: true
+            ),
+        NotificationChannel(
+          channelGroupKey: 'schedule_tests',
+          channelKey: 'scheduled',
+          channelName: 'Scheduled notifications',
+          channelDescription: 'Notifications with schedule functionality',
+          defaultColor: Color(0xFF9D50DD),
+          ledColor: Color(0xFF9D50DD),
+          vibrationPattern: lowVibrationPattern,
+          importance: NotificationImportance.High,
+          defaultRingtoneType: DefaultRingtoneType.Alarm,
+          criticalAlerts: true,
+            channelShowBadge: true
+
+        ),
+      ],
+    channelGroups: [
+        NotificationChannelGroup(
+          channelGroupkey: "basic_tests",
+          channelGroupName:  "Basic tests",
+
+        ),
+        NotificationChannelGroup(
+          channelGroupkey: 'schedule_tests',
+          channelGroupName: 'Schedule tests'
+      ),
+
+    ],
+    debug: true,
+  );
 
   runApp( MyApp());
 }
