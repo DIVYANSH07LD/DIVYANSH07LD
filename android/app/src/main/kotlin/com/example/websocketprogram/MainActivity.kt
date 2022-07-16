@@ -1,4 +1,4 @@
-package com.example.websocketprogram
+package com.custom.project
 
 import io.flutter.embedding.android.FlutterActivity
 

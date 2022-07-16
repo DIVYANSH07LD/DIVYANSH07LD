@@ -1,7 +1,9 @@
+import 'package:awesome_notifications/android_foreground_service.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:websocketprogram/controller/downloadcontroller.dart';
-
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'controller/notificationcontroller.dart';
 
 
@@ -13,11 +15,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String title = '';
   final notificationcontroller _noti = Get.put(notificationcontroller());
   final downloadcontroller _down = Get.put(downloadcontroller());
-
   TimeOfDay? timeOfDay;
-
+  String deviceTokentoSendNotification = '';
   Future<DateTime?> pickScheduleDate(BuildContext context,
       {required bool isUtc}) async {
     TimeOfDay? timeOfDay;
@@ -52,12 +54,43 @@ class _HomePageState extends State<HomePage> {
               }
   }
 
+
+  @override
+  void initState(){
+    ///when app is terminated
+    FirebaseMessaging.instance.getInitialMessage().then((message) {
+        if(message!=null){
+            print("New Notification");
+        }
+    });
+    ///when app is open
+    FirebaseMessaging.onMessage.listen((message) {
+      print(FirebaseMessaging.onMessage.listen);
+        if(message.notification!=null){
+          title = message.notification!.title.toString();
+              print(message.notification!.title.toString());
+              print(message.notification!.body.toString());
+              print(message.data.toString());
+        }
+    });
+    ///when app is running in background
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+        print(FirebaseMessaging.onMessageOpenedApp.listen);
+        if(message.notification!=null){
+          print(message.notification!.title.toString());
+          print(message.notification!.body.toString());
+          print(message.data.toString());
+        }
+    });
+  }
+
   void fun(int feature){
     switch(feature){
       case 0:
-        _noti.sendNotification();
+        _noti.sendNotification(
+            title: title.toString()
+        );
         break;
-
       case 1:
         schedule();
         break;
@@ -66,8 +99,19 @@ class _HomePageState extends State<HomePage> {
         break;
     }
   }
+
+  ///get fcm token
+  Future<void> _getfcmToken()async{
+      final FirebaseMessaging _fcm = FirebaseMessaging.instance;
+      final token = await _fcm.getToken();
+      deviceTokentoSendNotification = token.toString();
+      print(deviceTokentoSendNotification);
+  }
+
   @override
   Widget build(BuildContext context) {
+    _getfcmToken();
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Flutter Custom Functions"),

@@ -42,7 +42,6 @@ class NotificationUtils{
           channelKey: 'basic_channel',
           // groupKey: '',
           wakeUpScreen: true,
-
           autoDismissible: false,
           color: Colors.red,
           displayOnForeground: true,

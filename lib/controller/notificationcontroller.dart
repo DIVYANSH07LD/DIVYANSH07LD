@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,7 +16,10 @@ class notificationcontroller extends GetxController{
     super.onInit();
     listofnotifications();
   }
-  void  sendNotification(){
+
+
+
+  void  sendNotification({String?title}){
     AwesomeNotifications().isNotificationAllowed().then((value) {
       if(!value){
           AwesomeNotifications().requestPermissionToSendNotifications();
@@ -25,10 +29,10 @@ class notificationcontroller extends GetxController{
       AwesomeNotifications().createNotification(
           content: NotificationContent(
             id: createUniqueID(AwesomeNotifications.maxID),
-            channelKey: 'test_channel',
+            channelKey: 'pushnotificationapp',
                  displayOnForeground: true,
                   displayOnBackground: true,
-                 title: "New Notification",
+                 title: title,
              body: "I hope it works",
           ));
       Fluttertoast.showToast(msg: "Notification created");
@@ -56,7 +60,11 @@ class notificationcontroller extends GetxController{
                 body: "I hope it works",
                payload: {'uuid': 'uuid-test'},
             ),
-        schedule:NotificationCalendar.fromDate(date: datepick!, preciseAlarm: true)
+        schedule:NotificationCalendar.fromDate(
+            date: datepick!,
+            preciseAlarm: true,
+           repeats: true,
+        )
         );
         Fluttertoast.showToast(msg: "Notification Scheduled on ${datepick}");
   }
