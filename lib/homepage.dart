@@ -2,8 +2,10 @@ import 'package:awesome_notifications/android_foreground_service.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:websocketprogram/controller/downloadcontroller.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:websocketprogram/controller/signInController.dart';
 import 'controller/notificationcontroller.dart';
 
 
@@ -18,6 +20,8 @@ class _HomePageState extends State<HomePage> {
   String title = '';
   final notificationcontroller _noti = Get.put(notificationcontroller());
   final downloadcontroller _down = Get.put(downloadcontroller());
+  final GoogleSignController _googleSignController = Get.put(GoogleSignController());
+
   TimeOfDay? timeOfDay;
   String deviceTokentoSendNotification = '';
   Future<DateTime?> pickScheduleDate(BuildContext context,
@@ -28,12 +32,12 @@ class _HomePageState extends State<HomePage> {
         context: context,
         initialDate: now,
         firstDate: now,
-        lastDate: now.add(Duration(days: 365)));
+        lastDate: now.add(const Duration(days: 365)));
 
     if (newDate != null) {
       timeOfDay = await showTimePicker(
         context: context,
-        initialTime: TimeOfDay.fromDateTime(now.add(Duration(minutes: 1))),
+        initialTime: TimeOfDay.fromDateTime(now.add(const Duration(minutes: 1))),
       );
 
       if (timeOfDay != null) {
@@ -97,6 +101,9 @@ class _HomePageState extends State<HomePage> {
       case 2:
         _down.startdownloading();
         break;
+      case 3:
+        _googleSignController.loginWithGoogle();
+        break;
     }
   }
 
@@ -114,11 +121,11 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Flutter Custom Functions"),
+        title: const Text("Flutter Custom Functions"),
       ),
       body: GridView.builder(
           itemCount: _gridtext.length,
-          padding: EdgeInsets.all(12),
+          padding: const EdgeInsets.all(12),
           gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 12,
@@ -143,12 +150,12 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Flexible(
                         child: Text(_gridtext[index].toString(),
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                           fontSize: 15,fontWeight: FontWeight.bold
                         ),),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Icon(_gridicon[index].icon,color: Colors.indigo.shade50,)
@@ -190,46 +197,56 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  List<String> _gridtext = [
+  final List<String> _gridtext = [
     "Simple Notification",
     "Scheduled Notification",
     "Download Any File",
-
+    "Google SignIn"
   ];
-  List<Icon> _gridicon = [
-    Icon(Icons.notifications_active),
-    Icon(Icons.timer),
-    Icon(Icons.download),
+  final List<Icon> _gridicon = [
+    const Icon(Icons.notifications_active),
+    const Icon(Icons.timer),
+    const Icon(Icons.download),
+    const Icon(Icons.login)
   ];
 
-  List<LinearGradient> _gridlineargradient = [
-    LinearGradient(
+  final List<LinearGradient> _gridlineargradient = [
+    const LinearGradient(
         colors: [
           Color(0xFF2193b0),
           Color(0xFF6dd5ed),
         ],
-        begin: const FractionalOffset(0.0, 0.0),
-        end: const FractionalOffset(1.0, 0.0),
+        begin: FractionalOffset(0.0, 0.0),
+        end: FractionalOffset(1.0, 0.0),
         stops: [0.0, 1.0],
         tileMode: TileMode.clamp),
-    LinearGradient(
+    const LinearGradient(
         colors: [
-          Color(0xFF2980B9),
-          Color(0xFF6DD5FA),
+          const Color(0xFF2980B9),
+          const Color(0xFF6DD5FA),
         ],
-        begin: const FractionalOffset(0.0, 0.0),
-        end: const FractionalOffset(1.0, 0.0),
+        begin: FractionalOffset(0.0, 0.0),
+        end: FractionalOffset(1.0, 0.0),
         stops: [0.0, 1.0],
         tileMode: TileMode.clamp),
-    LinearGradient(
+    const LinearGradient(
         colors: [
           Color(0xFFf12711),
-          Color(0xFFf5af19),
+          const Color(0xFFf5af19),
         ],
-        begin: const FractionalOffset(0.0, 0.0),
-        end: const FractionalOffset(1.0, 0.0),
+        begin: FractionalOffset(0.0, 0.0),
+        end: FractionalOffset(1.0, 0.0),
         stops: [0.0, 1.0],
-        tileMode: TileMode.clamp)
+        tileMode: TileMode.clamp),
+    const LinearGradient(
+        colors: [
+          Color(0xFF22c1c3),
+           Color(0xFFfdbb2d),
+        ],
+        begin: FractionalOffset(0.0, 0.0),
+        end: FractionalOffset(1.0, 0.0),
+        stops: [0.0, 1.0],
+        tileMode: TileMode.clamp),
   ];
 
 
